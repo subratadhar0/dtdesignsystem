@@ -1049,8 +1049,8 @@
   .alert--default .alert__lead, .alert--default .alert__title { color: #1565C0; }
   .alert--success { background: #E8F5E9; border: 1px solid #A5D6A7; }
   .alert--success .alert__lead, .alert--success .alert__title { color: #388E3C; }
-  .alert--warning { background: #FFFDE7; border: 1px solid #FFE082; }
-  .alert--warning .alert__lead, .alert--warning .alert__title { color: #F57F17; }
+  .alert--warning { background: #FFF3E0; border: 1px solid #FFE082; }
+  .alert--warning .alert__lead, .alert--warning .alert__title { color: #F57C00; }
   .alert--danger  { background: #FFEBEE; border: 1px solid #FFCDD2; }
   .alert--danger  .alert__lead, .alert--danger  .alert__title { color: #D32F2F; }
 
@@ -1300,7 +1300,7 @@
   }
   .avatar__dot--busy    { background: #D32F2F; }
   .avatar__dot--online  { background: #388E3C; }
-  .avatar__dot--away    { background: #F57F17; }
+  .avatar__dot--away    { background: #F57C00; }
 
   /* Variants grid */
   .v-matrix {
@@ -2852,20 +2852,20 @@
     --color-success-border:  #A5D6A7;
     --color-success-icon:    #388E3C;
 
-    --color-warning-bg:      #FFFDE7;
-    --color-warning-text:    #F57F17;
-    --color-warning-border:  #FFE082;
-    --color-warning-icon:    #F57F17;
+    --color-warning-bg:      #FFF3E0;
+    --color-warning-text:    #F57C00;
+    --color-warning-border:  #FFCC80;
+    --color-warning-icon:    #F57C00;
 
     --color-critical-bg:     #FFEBEE;
     --color-critical-text:   #C62828;
     --color-critical-border: #FFCDD2;
     --color-critical-icon:   #D32F2F;
 
-    --color-completed-bg:    #EDE7F6;
-    --color-completed-text:  #5E35B1;
-    --color-completed-border:#D1C4E9;
-    --color-completed-icon:  #7E57C2;
+    --color-completed-bg:    #E1F5FE;
+    --color-completed-text:  #0277BD;
+    --color-completed-border:#81D4FA;
+    --color-completed-icon:  #03A9F4;
 
     --color-nav-active-bg:   #E3F2FD;
     --color-nav-active-text: #1565C0;
@@ -2936,10 +2936,10 @@
     --color-critical-icon:  #F87171;
 
     /* Status — completed */
-    --color-completed-bg:   #2E1065;
-    --color-completed-text: #C4B5FD;
-    --color-completed-border:#4C1D95;
-    --color-completed-icon: #A78BFA;
+    --color-completed-bg:   #0C2D48;
+    --color-completed-text: #81D4FA;
+    --color-completed-border:#0277BD;
+    --color-completed-icon: #29B6F6;
 
     /* Nav */
     --color-nav-active-bg:  #1E3A5F;
@@ -3618,13 +3618,50 @@
     .shell { grid-template-columns: 1fr; }
 
     /* SECTION 4 — main padding */
-    .main { padding: 20px 16px 64px; }
+    .main { padding: 20px 16px 64px; min-width: 0; }  /* min-width:0 lets the grid item shrink so inner scroll regions engage instead of widening the page */
 
     /* SECTION 5 — display headings */
     .display-heading { font-size: clamp(24px, 7vw, 36px); }
 
     /* SECTION 6 — card grid → 1 col */
     .token-grid { grid-template-columns: 1fr !important; }
+
+    /* SECTION 8 — colour ramps: horizontal scroll, contained, with edge fade */
+    .hue-ramp {
+      position: relative;
+      overflow: hidden;            /* contain the scroll row — never widen the viewport */
+    }
+    .hue-ramp__row {
+      display: flex;
+      gap: 10px;
+      min-width: 100%;             /* fill the track, overflow scrolls instead of compressing */
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border-default) transparent;
+    }
+    .hue-ramp__row > * {
+      flex: 0 0 auto;              /* swatches keep their size — no shrink, no dead space */
+      min-width: 64px;
+    }
+    .hue-ramp__row::-webkit-scrollbar { height: 4px; }
+    .hue-ramp__row::-webkit-scrollbar-track { background: transparent; }
+    .hue-ramp__row::-webkit-scrollbar-thumb {
+      background: var(--color-border-default);
+      border-radius: 999px;
+    }
+    /* subtle right-edge fade hints there are more swatches off-screen */
+    .hue-ramp::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 44px;
+      height: 100px;               /* sits over the swatch band, never reaches the header */
+      pointer-events: none;
+      background: linear-gradient(to right, transparent, var(--color-bg-page));
+    }
 
     /* SECTION 7 — playground stacks: controls on top, preview below */
     .pg-grid {
@@ -3756,119 +3793,82 @@
    DATA
    ====================================================================== */
 const COBALT    = ['#E3F2FD','#BBDEFB','#90CAF9','#64B5F6','#42A5F5','#2196F3','#1E88E5','#1565C0','#0D47A1','#002171'];
-const SKY       = ['#E1F5FE','#B3E5FC','#81D4FA','#4FC3F7','#29B6F6','#03A9F4','#039BE5','#0288D1','#0277BD','#01579B'];
-const LAVENDER  = ['#F3E5F5','#E1BEE7','#CE93D8','#BA68C8','#AB47BC','#9C27B0','#8E24AA','#7B1FA2','#6A1B9A','#4A148C'];
+const SECONDARY = ['#E1F5FE','#B3E5FC','#81D4FA','#4FC3F7','#29B6F6','#03A9F4','#039BE5','#0288D1','#0277BD','#01579B'];
 const JADE      = ['#E8F5E9','#C8E6C9','#A5D6A7','#81C784','#66BB6A','#4CAF50','#43A047','#388E3C','#2E7D32','#1B5E20'];
-const AMBER     = ['#FFFDE7','#FFF9C4','#FFF59D','#FFF176','#FFEE58','#FFEB3B','#FDD835','#F9A825','#F57F17','#E65100'];
-const CRIMSON   = ['#FFEBEE','#FFCDD2','#EF9A9A','#E57373','#EF5350','#F44336','#E53935','#D32F2F','#C62828','#B71C1C'];
+const AMBER     = ['#FFF3E0','#FFE0B2','#FFCC80','#FFB74D','#FFA726','#FF9800','#FB8C00','#F57C00','#EF6C00','#E65100'];
+const DANGEROUS = ['#FFEBEE','#FFCDD2','#EF9A9A','#E57373','#EF5350','#F44336','#E53935','#D32F2F','#C62828','#B71C1C'];
 const SLATE     = ['#ECEFF1','#CFD8DC','#B0BEC5','#90A4AE','#78909C','#607D8B','#546E7A','#455A64','#37474F','#263238'];
 const INK       = ['#FAFAFA','#F5F5F5','#EEEEEE','#E0E0E0','#BDBDBD','#9E9E9E','#757575','#616161','#424242','#212121'];
 
 const STOPS = [10,100,200,300,400,500,600,700,800,900];
 
 /* ----------------------------------------------------------------
-   HUE RAMPS — 10 stops per family
+   HUE RAMPS — 7 families, 10 stops each (stops 10 → 900)
    ---------------------------------------------------------------- */
+const buildStops = (arr) => arr.map((hex, i) => ({ stop: STOPS[i], hex }));
+
 const HUE_RAMPS = [
   {
-    family: 'Neutral',
+    family: 'Cobalt',
+    prefix: 'primary',
+    purpose: 'Primary — anchors primary actions, links and active states.',
+    stops: buildStops(COBALT),
+  },
+  {
+    family: 'Secondary',
+    prefix: 'secondary',
+    purpose: 'Secondary — anchors secondary actions, informational states, and completed status.',
+    stops: buildStops(SECONDARY),
+  },
+  {
+    family: 'Jade',
+    prefix: 'success',
+    purpose: 'Success — confirmations, healthy signals and positive outcomes.',
+    stops: buildStops(JADE),
+  },
+  {
+    family: 'Amber',
+    prefix: 'warning',
+    purpose: 'Warning — caution states and time-sensitive alerts.',
+    stops: buildStops(AMBER),
+  },
+  {
+    family: 'Dangerous',
+    prefix: 'dangerous',
+    purpose: 'Dangerous — errors, destructive actions and system failures.',
+    stops: buildStops(DANGEROUS),
+  },
+  {
+    family: 'Slate',
+    prefix: 'neutral',
+    purpose: 'Neutral — secondary text, subheadings and muted UI copy.',
+    stops: buildStops(SLATE),
+  },
+  {
+    family: 'Ink',
     prefix: 'fg / bg / border',
-    purpose: 'Foregrounds, surfaces and borders. The chrome of the product.',
-    stops: [
-      { stop: 50,  hex: '#FAFAFA' },
-      { stop: 100, hex: '#F4F4F5' },
-      { stop: 200, hex: '#E4E4E7' },
-      { stop: 300, hex: '#D4D4D8' },
-      { stop: 400, hex: '#A1A1AA' },
-      { stop: 500, hex: '#71717A' },
-      { stop: 600, hex: '#52525C' },
-      { stop: 700, hex: '#3F3F46' },
-      { stop: 800, hex: '#27272A' },
-      { stop: 900, hex: '#020617' },
-    ],
-  },
-  {
-    family: 'Brand',
-    prefix: 'brand',
-    purpose: 'Anchors actions, links and active states.',
-    stops: [
-      { stop: 50,  hex: '#EFF6FF' },
-      { stop: 100, hex: '#DBEAFE' },
-      { stop: 200, hex: '#BFDBFE' },
-      { stop: 300, hex: '#8FB9FF' },
-      { stop: 400, hex: '#5D9FFF' },
-      { stop: 500, hex: '#2C7FFF' },
-      { stop: 600, hex: '#1A60D9' },
-      { stop: 700, hex: '#1E3A8A' },
-      { stop: 800, hex: '#142970' },
-      { stop: 900, hex: '#0B1B4F' },
-    ],
-  },
-  {
-    family: 'Pink',
-    prefix: 'highlight',
-    purpose: 'Highlight — callouts, tags and ambient accents.',
-    stops: [
-      { stop: 50,  hex: '#FDF4FF' },
-      { stop: 100, hex: '#FAE7FE' },
-      { stop: 200, hex: '#F4D2FB' },
-      { stop: 300, hex: '#ECB2F5' },
-      { stop: 400, hex: '#DD86EA' },
-      { stop: 500, hex: '#C656D8' },
-      { stop: 600, hex: '#A632B7' },
-      { stop: 700, hex: '#842294' },
-      { stop: 800, hex: '#631874' },
-      { stop: 900, hex: '#3F0E50' },
-    ],
-  },
-  {
-    family: 'Green',
-    prefix: 'highlight',
-    purpose: 'Highlight — success states, healthy signals.',
-    stops: [
-      { stop: 50,  hex: '#F2FBE8' },
-      { stop: 100, hex: '#E8F7DC' },
-      { stop: 200, hex: '#DDF3CF' },
-      { stop: 300, hex: '#BFE5A5' },
-      { stop: 400, hex: '#97D26F' },
-      { stop: 500, hex: '#6FB93E' },
-      { stop: 600, hex: '#549A2A' },
-      { stop: 700, hex: '#427920' },
-      { stop: 800, hex: '#335C1A' },
-      { stop: 900, hex: '#233F12' },
-    ],
-  },
-  {
-    family: 'Purple',
-    prefix: 'highlight',
-    purpose: 'Highlight — completed states, secondary accents.',
-    stops: [
-      { stop: 50,  hex: '#F5F0FF' },
-      { stop: 100, hex: '#ECE0FF' },
-      { stop: 200, hex: '#E2D6FE' },
-      { stop: 300, hex: '#C3AAFD' },
-      { stop: 400, hex: '#9B7AFB' },
-      { stop: 500, hex: '#7349F7' },
-      { stop: 600, hex: '#5A2EE0' },
-      { stop: 700, hex: '#4621B0' },
-      { stop: 800, hex: '#341780' },
-      { stop: 900, hex: '#220E55' },
-    ],
+    purpose: 'Pure neutral — surfaces, borders and the darkest foreground text.',
+    stops: buildStops(INK),
   },
 ];
 
 // Anchor map: stops referenced by named semantic tokens.
 const HUE_ANCHORS = {
-  'Neutral|100': ['bg.base', 'border.subtle'],
-  'Neutral|200': ['border.strong'],
-  'Neutral|600': ['fg.secondary'],
-  'Neutral|900': ['fg.primary'],
-  'Brand|100':   ['brand.subtle'],
-  'Brand|500':   ['brand.base'],
-  'Brand|700':   ['brand.strong'],
-  'Pink|200':    ['highlight.pink'],
-  'Green|200':   ['highlight.green'],
-  'Purple|200':  ['highlight.purple'],
+  'Cobalt|10':      ['bg.brand-subtle'],
+  'Cobalt|700':     ['action.primary', 'brand'],
+  'Secondary|10':   ['bg.completed'],
+  'Secondary|700':  ['text.info'],
+  'Secondary|800':  ['text.completed'],
+  'Jade|10':        ['bg.success'],
+  'Jade|700':       ['text.success'],
+  'Amber|10':       ['bg.warning'],
+  'Amber|700':      ['text.warning'],
+  'Dangerous|10':   ['bg.critical'],
+  'Dangerous|700':  ['action.danger', 'text.critical'],
+  'Slate|600':      ['text.body'],
+  'Slate|700':      ['text.subheading'],
+  'Ink|300':        ['border.default'],
+  'Ink|900':        ['fg.primary'],
 };
 
 /* ----- HSL helper ----- */
@@ -3930,7 +3930,7 @@ const ROUTES = {
   'colours.base': {
     breadcrumb: 'FOUNDATIONS · COLOURS · BASE',
     heading: 'the raw palette',
-    description: 'Five hue families — Neutral, Brand, Pink, Green, Purple. Each ramp runs ten stops from 50 (lightest tint) to 900 (darkest shade). Stops with a blue ring are referenced by a named semantic token.',
+    description: 'Seven hue families — Cobalt, Secondary, Jade, Amber, Dangerous, Slate, Ink. Each ramp runs ten stops from 10 (lightest tint) to 900 (darkest shade). Stops with a blue ring are referenced by a named semantic token.',
     render: renderColoursBase,
   },
   'colours.semantic': {
@@ -4824,8 +4824,8 @@ const BADGE_TONES = {
     heavy: { bg: '#388E3C', border: '#388E3C', text: '#FFFFFF', icon: '#FFFFFF' },
   },
   warning: {
-    light: { bg: '#FFFDE7', border: '#FFE082', text: '#F57F17', icon: '#F57F17' },
-    heavy: { bg: '#F57F17', border: '#F57F17', text: '#FFFFFF', icon: '#FFFFFF' },
+    light: { bg: '#FFF3E0', border: '#FFE082', text: '#F57C00', icon: '#F57C00' },
+    heavy: { bg: '#F57C00', border: '#F57C00', text: '#FFFFFF', icon: '#FFFFFF' },
   },
   error: {
     light: { bg: '#FFEBEE', border: '#FFCDD2', text: '#D32F2F', icon: '#D32F2F' },
@@ -6062,7 +6062,7 @@ function emptyStateIllustration(type) {
         <circle cx="96" cy="68" r="18" fill="#FFFFFF" stroke="#1565C0" stroke-width="4"/>
         <line x1="109" y1="81" x2="122" y2="94" stroke="#1565C0" stroke-width="5" stroke-linecap="round"/>
         <!-- amber zero badge -->
-        <circle cx="108" cy="22" r="11" fill="#F57F17"/>
+        <circle cx="108" cy="22" r="11" fill="#F57C00"/>
         <text x="108" y="27" font-family="Nunito, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">0</text>
       </svg>
     `;
@@ -9489,11 +9489,11 @@ const SEMANTIC_GROUPS = [
       ['--semantic-colour-bg-inverse',        'ink-900',       '#111111'],
       ['--semantic-colour-bg-brand',          'cobalt-700',    '#1565C0'],
       ['--semantic-colour-bg-brand-subtle',   'cobalt-10',     '#E3F2FD'],
-      ['--semantic-colour-bg-info',           'sky-10',        '#E1F5FE'],
+      ['--semantic-colour-bg-info',           'secondary-10',  '#E1F5FE'],
       ['--semantic-colour-bg-success',        'jade-10',       '#E8F5E9'],
-      ['--semantic-colour-bg-warning',        'amber-10',      '#FFFDE7'],
-      ['--semantic-colour-bg-critical',       'crimson-10',    '#FFEBEE'],
-      ['--semantic-colour-bg-completed',      'lavender-10',   '#F3E5F5'],
+      ['--semantic-colour-bg-warning',        'amber-10',      '#FFF3E0'],
+      ['--semantic-colour-bg-critical',       'dangerous-10',  '#FFEBEE'],
+      ['--semantic-colour-bg-completed',      'secondary-10',  '#E1F5FE'],
     ],
   },
   {
@@ -9505,21 +9505,21 @@ const SEMANTIC_GROUPS = [
       ['--semantic-colour-border-strong',   'ink-400',       '#BDBDBD'],
       ['--semantic-colour-border-focus',    'cobalt-700',    '#1565C0'],
       ['--semantic-colour-border-inverse',  'neutral-white', '#FFFFFF'],
-      ['--semantic-colour-border-info',     'sky-500',       '#03A9F4'],
+      ['--semantic-colour-border-info',     'secondary-500', '#03A9F4'],
       ['--semantic-colour-border-success',  'jade-500',      '#4CAF50'],
-      ['--semantic-colour-border-warning',  'amber-500',     '#FFEB3B'],
-      ['--semantic-colour-border-critical', 'crimson-500',   '#F44336'],
+      ['--semantic-colour-border-warning',  'amber-500',     '#FFA726'],
+      ['--semantic-colour-border-critical', 'dangerous-500', '#F44336'],
     ],
   },
   {
     name: 'Status text',
     note: 'Text and icon colours for inline status labels, alert messages and feedback copy.',
     tokens: [
-      ['--semantic-colour-text-info',      'sky-700',      '#0288D1'],
+      ['--semantic-colour-text-info',      'secondary-700', '#0288D1'],
       ['--semantic-colour-text-success',   'jade-700',     '#388E3C'],
-      ['--semantic-colour-text-warning',   'amber-700',    '#F57F17'],
-      ['--semantic-colour-text-critical',  'crimson-700',  '#D32F2F'],
-      ['--semantic-colour-text-completed', 'lavender-700', '#7B1FA2'],
+      ['--semantic-colour-text-warning',   'amber-700',    '#F57C00'],
+      ['--semantic-colour-text-critical',  'dangerous-700', '#D32F2F'],
+      ['--semantic-colour-text-completed', 'secondary-800', '#0277BD'],
     ],
   },
   {
@@ -9530,10 +9530,10 @@ const SEMANTIC_GROUPS = [
       ['--semantic-colour-icon-muted',      'slate-400',     '#78909C'],
       ['--semantic-colour-icon-on-surface', 'neutral-white', '#FFFFFF'],
       ['--semantic-colour-icon-brand',      'cobalt-700',    '#1565C0'],
-      ['--semantic-colour-icon-info',       'sky-600',       '#039BE5'],
+      ['--semantic-colour-icon-info',       'secondary-600', '#039BE5'],
       ['--semantic-colour-icon-success',    'jade-600',      '#43A047'],
-      ['--semantic-colour-icon-warning',    'amber-700',     '#F57F17'],
-      ['--semantic-colour-icon-critical',   'crimson-600',   '#E53935'],
+      ['--semantic-colour-icon-warning',    'amber-700',     '#F57C00'],
+      ['--semantic-colour-icon-critical',   'dangerous-600', '#E53935'],
     ],
   },
   {
@@ -9551,10 +9551,10 @@ const SEMANTIC_GROUPS = [
       ['--semantic-colour-action-ghost-default',     'transparent',   'transparent'],
       ['--semantic-colour-action-ghost-hover',       'cobalt-10',     '#E3F2FD'],
       ['--semantic-colour-action-ghost-active',      'cobalt-100',    '#BBDEFB'],
-      ['--semantic-colour-action-danger-default',    'crimson-700',   '#D32F2F'],
-      ['--semantic-colour-action-danger-hover',      'crimson-600',   '#E53935'],
-      ['--semantic-colour-action-danger-active',     'crimson-800',   '#C62828'],
-      ['--semantic-colour-action-danger-disabled',   'crimson-100',   '#FFCDD2'],
+      ['--semantic-colour-action-danger-default',    'dangerous-700', '#D32F2F'],
+      ['--semantic-colour-action-danger-hover',      'dangerous-600', '#E53935'],
+      ['--semantic-colour-action-danger-active',     'dangerous-800', '#C62828'],
+      ['--semantic-colour-action-danger-disabled',   'dangerous-100', '#FFCDD2'],
       ['--semantic-colour-action-on-primary',        'neutral-white', '#FFFFFF'],
     ],
   },
@@ -9632,19 +9632,19 @@ const COMPONENT_TOKENS = [
   { id: 'alert', name: 'Alert', tokens: [
     ['bg-info',         '--semantic-colour-bg-info',             '#E1F5FE'],
     ['bg-success',      '--semantic-colour-bg-success',          '#E8F5E9'],
-    ['bg-warning',      '--semantic-colour-bg-warning',          '#FFFDE7'],
+    ['bg-warning',      '--semantic-colour-bg-warning',          '#FFF3E0'],
     ['bg-critical',     '--semantic-colour-bg-critical',         '#FFEBEE'],
     ['border-info',     '--semantic-colour-border-info',         '#03A9F4'],
     ['border-success',  '--semantic-colour-border-success',      '#4CAF50'],
-    ['border-warning',  '--semantic-colour-border-warning',      '#FFEB3B'],
+    ['border-warning',  '--semantic-colour-border-warning',      '#FFA726'],
     ['border-critical', '--semantic-colour-border-critical',     '#F44336'],
     ['icon-info',       '--semantic-colour-icon-info',           '#039BE5'],
     ['icon-success',    '--semantic-colour-icon-success',        '#43A047'],
-    ['icon-warning',    '--semantic-colour-icon-warning',        '#F57F17'],
+    ['icon-warning',    '--semantic-colour-icon-warning',        '#F57C00'],
     ['icon-critical',   '--semantic-colour-icon-critical',       '#E53935'],
     ['text-title-info',     '--semantic-colour-text-info',       '#0288D1'],
     ['text-title-success',  '--semantic-colour-text-success',    '#388E3C'],
-    ['text-title-warning',  '--semantic-colour-text-warning',    '#F57F17'],
+    ['text-title-warning',  '--semantic-colour-text-warning',    '#F57C00'],
     ['text-title-critical', '--semantic-colour-text-critical',   '#D32F2F'],
     ['text-body',       '--semantic-colour-text-body1',          '#546E7A'],
     ['action-text',     '--semantic-colour-text-brand-primary',  '#1E88E5'],
@@ -9653,19 +9653,19 @@ const COMPONENT_TOKENS = [
   { id: 'badge', name: 'Badge', tokens: [
     ['bg-info',         '--semantic-colour-bg-info',             '#E1F5FE'],
     ['bg-success',      '--semantic-colour-bg-success',          '#E8F5E9'],
-    ['bg-warning',      '--semantic-colour-bg-warning',          '#FFFDE7'],
+    ['bg-warning',      '--semantic-colour-bg-warning',          '#FFF3E0'],
     ['bg-critical',     '--semantic-colour-bg-critical',         '#FFEBEE'],
-    ['bg-completed',    '--semantic-colour-bg-completed',        '#F3E5F5'],
+    ['bg-completed',    '--semantic-colour-bg-completed',        '#E1F5FE'],
     ['bg-neutral',      '--semantic-colour-bg-surface',          '#FAFAFA'],
     ['text-info',       '--semantic-colour-text-info',           '#0288D1'],
     ['text-success',    '--semantic-colour-text-success',        '#388E3C'],
-    ['text-warning',    '--semantic-colour-text-warning',        '#F57F17'],
+    ['text-warning',    '--semantic-colour-text-warning',        '#F57C00'],
     ['text-critical',   '--semantic-colour-text-critical',       '#D32F2F'],
-    ['text-completed',  '--semantic-colour-text-completed',      '#7B1FA2'],
+    ['text-completed',  '--semantic-colour-text-completed',      '#0277BD'],
     ['text-neutral',    '--semantic-colour-text-muted',          '#78909C'],
     ['border-info',     '--semantic-colour-border-info',         '#03A9F4'],
     ['border-success',  '--semantic-colour-border-success',      '#4CAF50'],
-    ['border-warning',  '--semantic-colour-border-warning',      '#FFEB3B'],
+    ['border-warning',  '--semantic-colour-border-warning',      '#FFA726'],
     ['border-critical', '--semantic-colour-border-critical',     '#F44336'],
     ['dot-active',      '--semantic-colour-icon-success',        '#43A047'],
     ['number-bg',       '--semantic-colour-action-primary-default','#1565C0'],
@@ -9734,9 +9734,9 @@ const COMPONENT_TOKENS = [
   { id: 'avatar', name: 'Avatar', tokens: [
     ['bg-cobalt',         '--semantic-colour-bg-brand',               '#1565C0'],
     ['bg-jade',           '--semantic-colour-bg-success',             '#E8F5E9'],
-    ['bg-crimson',        '--semantic-colour-bg-critical',            '#FFEBEE'],
-    ['bg-lavender',       '--semantic-colour-bg-completed',           '#F3E5F5'],
-    ['bg-amber',          '--semantic-colour-bg-warning',             '#FFFDE7'],
+    ['bg-dangerous',      '--semantic-colour-bg-critical',            '#FFEBEE'],
+    ['bg-secondary',      '--semantic-colour-bg-completed',           '#E1F5FE'],
+    ['bg-amber',          '--semantic-colour-bg-warning',             '#FFF3E0'],
     ['text',              '--semantic-colour-action-on-primary',      '#FFFFFF'],
     ['border-default',    '--semantic-colour-border-default',         '#E0E0E0'],
     ['border-online',     '--semantic-colour-icon-success',           '#43A047'],
@@ -10162,4 +10162,6 @@ renderContent();
 #tabs-preview >[role="tablist"] { border-width: 0px !important }
 #tabs-preview >[role="tablist"] { opacity: 0 !important }
 #tabs-preview >[role="tablist"] { opacity: 1 !important }
+#tooltip-preview >.tt-stage { text-align: justify !important }
+#tooltip-preview >.tt-stage { text-align: center !important }
 </style>
